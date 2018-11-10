@@ -14,7 +14,7 @@ def get_rand_input_sites(num_sites):
 
 def from_file(sites):
     print("Parsing input from butterfly.edg")
-    with open('butterfly.edg', 'r') as f:
+    with open('Input/butterfly_v2.edg', 'r') as f:
         line = f.readline()
         while line:
             line = f.readline()
