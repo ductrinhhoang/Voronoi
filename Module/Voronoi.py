@@ -120,27 +120,27 @@ class Voronoi:
             arc.e = DifClasses.CircleEvent(x, o, arc)
             self.circle_events.push(arc.e)
 
-    def circle(self, a, b, c):
-        if ((b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y)) > 0:
+    def circle(self, point_A, point_B, point_C):
+        if ((point_B.x - point_A.x)*(point_C.y - point_A.y) - (point_C.x - point_A.x)*(point_B.y - point_A.y)) > 0:
             return False, None, None
 
-        A = b.x - a.x
-        B = b.y - a.y
-        C = c.x - a.x
-        D = c.y - a.y
-        E = A*(a.x + b.x) + B*(a.y + b.y)
-        F = C*(a.x + c.x) + D*(a.y + c.y)
-        G = 2*(A*(c.y - b.y) - B*(c.x - b.x))
+        if (point_B.x-point_A.x)*(point_C.y - point_B.y) == (point_B.y-point_A.y)*(point_C.x - point_B.x):
+            return False, None, None # Points are co-linear
 
-        if G == 0:
-            return False, None, None  # Points are co-linear
+        A = point_B.x - point_A.x
+        B = point_B.y - point_A.y
+        C = point_C.x - point_A.x
+        D = point_C.y - point_A.y
+        E = A*(point_A.x + point_B.x) + B*(point_A.y + point_B.y)
+        F = C*(point_A.x + point_C.x) + D*(point_A.y + point_C.y)
+        G = 2*(A*(point_C.y - point_B.y) - B*(point_C.x - point_B.x))
 
         # point o is the center of the circle
         ox = 1.0 * (D*E - B*F) / G
         oy = 1.0 * (A*F - C*E) / G
 
         # o.x plus radius equals max x coord
-        x = ox + math.sqrt((a.x-ox)**2 + (a.y-oy)**2)
+        x = ox + math.sqrt((point_A.x-ox)**2 + (point_A.y-oy)**2)
         o = DifClasses.Point(ox, oy)
 
         return True, x, o
