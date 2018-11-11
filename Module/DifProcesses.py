@@ -24,11 +24,9 @@ def get_data_from_file(input_path, num_bonus_point=0):
         print("Datas are got from:", input_path)
     return sites
 
-
-def save_txt_file(sites, voronoi, output_path):
-    with open(output_path + '/voronoi.diagram', 'w') as f:
-        f.write(str(len(sites)) + '\n')
-        f.write(str(len(sites)) + '\n')
+def save_to_txt_file(sites, voronoi, output_path):
+    with open(output_path + '/VoronoiDiagram.txt', 'w') as f:
+        f.write("Number of site: {}\n".format(len(sites)))
         v_vertex_list = []
         cell_lines = []
         for site in voronoi.voronoi_vertex:
@@ -39,14 +37,14 @@ def save_txt_file(sites, voronoi, output_path):
                     v_vertex_list.append(ver_as_tuple)
                 s = s + ' ' + str(v_vertex_list.index(ver_as_tuple))
             cell_lines.append(s)
-        f.write(str(len(v_vertex_list)) + '\n')
+        f.write("Number of vertex: {}\n".format(len(v_vertex_list)))
         for v in v_vertex_list:
             f.write(str(v[0]) + ' ' + str(v[1]) + '\n')
         for line in cell_lines:
             f.write(line + '\n')
 
 
-def save_png_file(sites, voronoi, lines, output_path):
+def save_to_png_file(sites, voronoi, lines, output_path):
     image = Image.new('RGBA', (1920, 1920), color=(255, 255, 255, 0))
     draw = ImageDraw.Draw(image)
     for site in sites:
@@ -60,4 +58,4 @@ def save_png_file(sites, voronoi, lines, output_path):
                           v_vertex.x + 10, v_vertex.y + 10), fill='red')
     # PIL indexing of y is up to down, so we must flip it
     image = image.rotate(180)
-    image.save(output_path + '/voronoi.png')
+    image.save(output_path + '/VoronoiDisplay.png')

@@ -235,9 +235,9 @@ def run(input_path, output_path="Output"):
         if not os.path.exists(output_path):
             os.mkdir(output_path)
 
-        print("Output is written in directory:", output_path)
-        DifProcesses.save_txt_file(sites, vor, output_path)
-        DifProcesses.save_png_file(sites, vor, lines, output_path)
+        print("Output is written to:", output_path)
+        DifProcesses.save_to_txt_file(sites, vor, output_path)
+        DifProcesses.save_to_png_file(sites, vor, lines, output_path)
 
         print('Running time: {0:.2f} s'.format(end - start))
     except:
