@@ -12,22 +12,8 @@ def get_rand_input_sites(num_sites):
     return sites
 
 
-def from_file(sites, input_path):
-    print("Datas are got from", input_path)
-    with open(input_path, 'r') as f:
-        line = f.readline()
-        while line:
-            line = f.readline()
-            if not line:
-                return
-            coords = line.split(' ')
-            if (float(coords[0])*5000, float(coords[1])*5000) not in sites:
-                sites.append((float(coords[0])*5000, float(coords[1])*5000))
-
-
-def get_data_from_file(input_path):
-    # sites = get_rand_input_sites(1000)
-    sites = []
+def get_data_from_file(input_path, num_bonus_point=0):
+    sites = get_rand_input_sites(num_bonus_point)
     with open(input_path) as f:
         lines = f.readlines()
         for line in lines[1:len(lines)]:

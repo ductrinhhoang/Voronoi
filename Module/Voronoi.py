@@ -1,23 +1,23 @@
 import math
 from collections import defaultdict
-from Module import OtherProcess
+from Module import DifProcesses
 import timeit
-from Module import DCEL
+from Module import DifClasses
 
 
 class Voronoi:
     def __init__(self, points):
-        self.hedges = []
+        self.hedges = [] # half edges
         self.arc = None  # binary tree
-        self.points = DCEL.PriorityQueue()
-        self.circle_events = DCEL.PriorityQueue()
+        self.circle_events = DifClasses.Queue()
         self.voronoi_vertex = defaultdict(list)
         self.inf_x = 0
         self.sup_x = 5000
         self.inf_y = 0
         self.sup_y = 5000
+        self.points = DifClasses.Queue()
         for pts in points:
-            point = DCEL.Point(pts[0], pts[1])
+            point = DifClasses.Point(pts[0], pts[1])
             self.points.push(point)
 
     def process(self):
@@ -40,7 +40,7 @@ class Voronoi:
         event = self.circle_events.pop()
 
         if event.valid:
-            s = DCEL.Hedge(event.point)
+            s = DifClasses.Hedge(event.point)
             self.hedges.append(s)
 
             arc = event.arc
@@ -66,7 +66,7 @@ class Voronoi:
 
     def arc_insert(self, site):
         if self.arc is None:
-            self.arc = DCEL.Arc(site)
+            self.arc = DifClasses.Arc(site)
         else:
             arc_at_site = self.arc
             while arc_at_site is not None:
@@ -74,26 +74,26 @@ class Voronoi:
                 if flag:
                     flag, __ = self.intersect(site, arc_at_site.pnext)
                     if (arc_at_site.pnext is not None) and (not flag):
-                        arc_at_site.pnext.pprev = DCEL.Arc(
+                        arc_at_site.pnext.pprev = DifClasses.Arc(
                             arc_at_site.site, arc_at_site, arc_at_site.pnext)
                         arc_at_site.pnext = arc_at_site.pnext.pprev
                     else:
-                        arc_at_site.pnext = DCEL.Arc(
+                        arc_at_site.pnext = DifClasses.Arc(
                             arc_at_site.site, arc_at_site)
                     arc_at_site.pnext.hedge1 = arc_at_site.hedge1
 
                     # add p between i and i.pnext
-                    arc_at_site.pnext.pprev = DCEL.Arc(
+                    arc_at_site.pnext.pprev = DifClasses.Arc(
                         site, arc_at_site, arc_at_site.pnext)
                     arc_at_site.pnext = arc_at_site.pnext.pprev
 
                     arc_at_site = arc_at_site.pnext
 
-                    seg = DCEL.Hedge(z)
+                    seg = DifClasses.Hedge(z)
                     self.hedges.append(seg)
                     arc_at_site.pprev.hedge1 = arc_at_site.hedge0 = seg
 
-                    seg = DCEL.Hedge(z)
+                    seg = DifClasses.Hedge(z)
                     self.hedges.append(seg)
                     arc_at_site.pnext.hedge0 = arc_at_site.hedge1 = seg
 
@@ -115,7 +115,7 @@ class Voronoi:
 
         flag, x, o = self.circle(arc.pprev.site, arc.site, arc.pnext.site)
         if flag and (x > x0):
-            arc.e = DCEL.CircleEvent(x, o, arc)
+            arc.e = DifClasses.CircleEvent(x, o, arc)
             self.circle_events.push(arc.e)
 
     def circle(self, a, b, c):
@@ -139,7 +139,7 @@ class Voronoi:
 
         # o.x plus radius equals max x coord
         x = ox + math.sqrt((a.x-ox)**2 + (a.y-oy)**2)
-        o = DCEL.Point(ox, oy)
+        o = DifClasses.Point(ox, oy)
 
         return True, x, o
 
@@ -162,7 +162,7 @@ class Voronoi:
             py = point.y
             px = 1.0 * ((arc.site.x) ** 2 + (arc.site.y - py) **
                         2 - point.x ** 2) / (2 * arc.site.x - 2 * point.x)
-            res = DCEL.Point(px, py)
+            res = DifClasses.Point(px, py)
             return True, res
         return False, None
 
@@ -188,7 +188,7 @@ class Voronoi:
             py = 1.0 * (-b-math.sqrt(b*b - 4*a*c)) / (2*a)
 
         px = 1.0 * (p.x**2 + (p.y-py)**2 - l**2) / (2*p.x-2*l)
-        res = DCEL.Point(px, py)
+        res = DifClasses.Point(px, py)
         return res
 
     def finish_edges(self):
@@ -211,8 +211,8 @@ class Voronoi:
 
 def run(input_path):
     try:
-        # sites = OtherProcess.get_rand_input_sites(1000)
-        sites = OtherProcess.get_data_from_file(input_path)
+        # sites = DifProcesses.get_rand_input_sites(1000)
+        sites = DifProcesses.get_data_from_file(input_path)
         vor = Voronoi(sites)
         print('Computing voronoi diagram for ' + str(len(sites)) + ' sites')
         strt = timeit.default_timer()
@@ -220,7 +220,7 @@ def run(input_path):
         end = timeit.default_timer()
         print('Time: ', end - strt)
         lines = vor.get_output()
-        OtherProcess.save_txt_file(sites, vor)
-        OtherProcess.save_png_file(sites, vor, lines)
+        DifProcesses.save_txt_file(sites, vor)
+        DifProcesses.save_png_file(sites, vor, lines)
     except:
         print("Has bug. Please check")
