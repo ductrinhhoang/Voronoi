@@ -14,9 +14,9 @@ class Voronoi:
         self.circle_events = DifClasses.Queue()
         self.voronoi_vertex = defaultdict(list)
         self.inf_x = 0
-        self.sup_x = 5000
+        self.sup_x = 1920
         self.inf_y = 0
-        self.sup_y = 5000
+        self.sup_y = 1920
         self.points = DifClasses.Queue()
         for pts in points:
             point = DifClasses.Point(pts[0], pts[1])
