@@ -1,7 +1,8 @@
 import math
 from collections import defaultdict
 from Module import DifProcesses
-import timeit
+# import timeit
+import time
 from Module import DifClasses
 import os
 
@@ -212,20 +213,20 @@ class Voronoi:
 
 def run(input_path, output_path = "Output"):
     try:
-        # sites = DifProcesses.get_rand_input_sites(1000)
         sites = DifProcesses.get_data_from_file(input_path)
         vor = Voronoi(sites)
-        print('Computing voronoi diagram for ' + str(len(sites)) + ' sites')
-        strt = timeit.default_timer()
+        start = time.time()
         vor.process()
-        end = timeit.default_timer()
-        print('Time: ', end - strt)
+        end = time.time()
         lines = vor.get_output()
         
         if not os.path.exists(output_path):
             os.mkdir(output_path)
-            
+        
+        print("Output is written in directory:", output_path)
         DifProcesses.save_txt_file(sites, vor, output_path)
         DifProcesses.save_png_file(sites, vor, lines, output_path)
+
+        print('Running time: {0:.2f} s'.format(end - start))
     except:
         print("Has bug. Please check")

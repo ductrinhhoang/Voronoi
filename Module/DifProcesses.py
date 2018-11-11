@@ -26,7 +26,6 @@ def get_data_from_file(input_path, num_bonus_point=0):
 
 
 def save_txt_file(sites, voronoi, output_path):
-    # print('Saving voronoi diagram to txt file')
     with open(output_path + '/voronoi.diagram', 'w') as f:
         f.write(str(len(sites)) + '\n')
         f.write(str(len(sites)) + '\n')
@@ -48,7 +47,6 @@ def save_txt_file(sites, voronoi, output_path):
 
 
 def save_png_file(sites, voronoi, lines, output_path):
-    print('Saving voronoi diagram to png file')
     image = Image.new('RGBA', (5000, 5000), color=(255, 255, 255, 0))
     draw = ImageDraw.Draw(image)
     for site in sites:
