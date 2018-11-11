@@ -12,10 +12,10 @@ class Voronoi:
         self.points = DCEL.PriorityQueue()
         self.circle_events = DCEL.PriorityQueue()
         self.voronoi_vertex = defaultdict(list)
-        self.x0 = 0
-        self.x1 = 5000
-        self.y0 = 0
-        self.y1 = 5000
+        self.inf_x = 0
+        self.sup_x = 5000
+        self.inf_y = 0
+        self.sup_y = 5000
         for pts in points:
             point = DCEL.Point(pts[0], pts[1])
             self.points.push(point)
@@ -192,7 +192,7 @@ class Voronoi:
         return res
 
     def finish_edges(self):
-        l = self.x1 + (self.x1 - self.x0) + (self.y1 - self.y0)
+        l = self.sup_x + (self.sup_x - self.inf_x) + (self.sup_y - self.inf_y)
         i = self.arc
         while i.pnext is not None:
             if i.hedge1 is not None:
@@ -207,6 +207,7 @@ class Voronoi:
             p1 = o.end
             res.append((p0.x, p0.y, p1.x, p1.y))
         return res
+
 
 def run(input_path):
     try:
