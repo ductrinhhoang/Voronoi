@@ -2,21 +2,7 @@ import heapq
 import itertools
 
 
-class Point:
-    x = 0.0
-    y = 0.0
-   
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-
 class CircleEvent:
-    x = 0.0
-    point = None
-    arc = None
-    valid = True
-    
     def __init__(self, x, point, arc):
         self.x = x
         self.point = point
@@ -24,12 +10,13 @@ class CircleEvent:
         self.valid = True
 
 
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
 class Arc:
-    site = None
-    pprev = None
-    pnext = None
-    e = None
-    
     def __init__(self, site, pprev=None, pnext=None):
         self.site = site
         self.pprev = pprev
@@ -41,10 +28,6 @@ class Arc:
 
 # half edge
 class Hedge:
-    start = None
-    end = None
-    done = False
-    
     def __init__(self, p):
         self.start = p
         self.end = None
@@ -54,7 +37,7 @@ class Hedge:
         if self.done:
             return
         self.end = p
-        self.done = True        
+        self.done = True
 
 
 class PriorityQueue:
@@ -65,7 +48,8 @@ class PriorityQueue:
 
     def push(self, item):
         # check for duplicate
-        if item in self.entry_finder: return
+        if item in self.entry_finder:
+            return
         count = next(self.counter)
         # use x-coordinate as a primary key (heapq in python is min-heap)
         entry = [item.x, count, item]

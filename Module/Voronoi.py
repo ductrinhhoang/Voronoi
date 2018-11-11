@@ -210,8 +210,8 @@ class Voronoi:
 
 def run(input_path):
     try:
-        sites = OtherProcess.get_rand_input_sites(1000)
-        OtherProcess.from_file(sites, input_path)
+        # sites = OtherProcess.get_rand_input_sites(1000)
+        sites = OtherProcess.get_data_from_file(input_path)
         vor = Voronoi(sites)
         print('Computing voronoi diagram for ' + str(len(sites)) + ' sites')
         strt = timeit.default_timer()
@@ -222,4 +222,4 @@ def run(input_path):
         OtherProcess.save_txt_file(sites, vor)
         OtherProcess.save_png_file(sites, vor, lines)
     except:
-        print("Can't not read file. Please check your path!")
+        print("Has bug. Please check")

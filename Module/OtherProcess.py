@@ -25,6 +25,20 @@ def from_file(sites, input_path):
                 sites.append((float(coords[0])*5000, float(coords[1])*5000))
 
 
+def get_data_from_file(input_path):
+    # sites = get_rand_input_sites(1000)
+    sites = []
+    with open(input_path) as f:
+        lines = f.readlines()
+        for line in lines[1:len(lines)]:
+            coords = line.split(" ")
+            if (float(coords[0])*5000, float(coords[1])*5000) not in sites:
+                sites.append(
+                    (float(coords[0])*5000, float(coords[1])*5000))
+        print("Datas are got from", input_path)
+    return sites
+
+
 def save_txt_file(sites, voronoi):
     print('Saving voronoi diagram to txt file')
     with open('voronoi.diagram', 'w') as f:
