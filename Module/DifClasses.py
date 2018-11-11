@@ -22,12 +22,12 @@ class Arc:
         self.pprev = pprev
         self.pnext = pnext
         self.e = None
-        self.hedge0 = None
-        self.hedge1 = None
+        self.HalfEdge0 = None
+        self.HalfEdge1 = None
 
 
 # half edge
-class Hedge:
+class HalfEdge:
     def __init__(self, p):
         self.start = p
         self.end = None

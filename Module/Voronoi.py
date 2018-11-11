@@ -9,7 +9,7 @@ import os
 
 class Voronoi:
     def __init__(self, points):
-        self.hedges = [] # half edges
+        self.HalfEdges = [] # half edges
         self.arc = None  # binary tree
         self.circle_events = DifClasses.Queue()
         self.voronoi_vertex = defaultdict(list)
@@ -42,24 +42,24 @@ class Voronoi:
         event = self.circle_events.pop()
 
         if event.valid:
-            s = DifClasses.Hedge(event.point)
-            self.hedges.append(s)
+            s = DifClasses.HalfEdge(event.point)
+            self.HalfEdges.append(s)
 
             arc = event.arc
             self.voronoi_vertex[arc.site].append(event.point)
             if arc.pprev is not None:
                 self.voronoi_vertex[arc.pprev.site].append(event.point)
                 arc.pprev.pnext = arc.pnext
-                arc.pprev.hedge1 = s
+                arc.pprev.HalfEdge1 = s
             if arc.pnext is not None:
                 self.voronoi_vertex[arc.pnext.site].append(event.point)
                 arc.pnext.pprev = arc.pprev
-                arc.pnext.hedge0 = s
+                arc.pnext.HalfEdge0 = s
 
-            if arc.hedge0 is not None:
-                arc.hedge0.finish(event.point)
-            if arc.hedge1 is not None:
-                arc.hedge1.finish(event.point)
+            if arc.HalfEdge0 is not None:
+                arc.HalfEdge0.finish(event.point)
+            if arc.HalfEdge1 is not None:
+                arc.HalfEdge1.finish(event.point)
 
             if arc.pprev is not None:
                 self.check_circle_event(arc.pprev, event.x)
@@ -82,7 +82,7 @@ class Voronoi:
                     else:
                         arc_at_site.pnext = DifClasses.Arc(
                             arc_at_site.site, arc_at_site)
-                    arc_at_site.pnext.hedge1 = arc_at_site.hedge1
+                    arc_at_site.pnext.HalfEdge1 = arc_at_site.HalfEdge1
 
                     # add p between i and i.pnext
                     arc_at_site.pnext.pprev = DifClasses.Arc(
@@ -91,13 +91,13 @@ class Voronoi:
 
                     arc_at_site = arc_at_site.pnext
 
-                    seg = DifClasses.Hedge(z)
-                    self.hedges.append(seg)
-                    arc_at_site.pprev.hedge1 = arc_at_site.hedge0 = seg
+                    seg = DifClasses.HalfEdge(z)
+                    self.HalfEdges.append(seg)
+                    arc_at_site.pprev.HalfEdge1 = arc_at_site.HalfEdge0 = seg
 
-                    seg = DifClasses.Hedge(z)
-                    self.hedges.append(seg)
-                    arc_at_site.pnext.hedge0 = arc_at_site.hedge1 = seg
+                    seg = DifClasses.HalfEdge(z)
+                    self.HalfEdges.append(seg)
+                    arc_at_site.pnext.HalfEdge0 = arc_at_site.HalfEdge1 = seg
 
                     self.check_circle_event(arc_at_site, site.x)
                     self.check_circle_event(arc_at_site.pprev, site.x)
@@ -197,14 +197,14 @@ class Voronoi:
         l = self.sup_x + (self.sup_x - self.inf_x) + (self.sup_y - self.inf_y)
         i = self.arc
         while i.pnext is not None:
-            if i.hedge1 is not None:
+            if i.HalfEdge1 is not None:
                 p = self.intersection(i.site, i.pnext.site, l*2.0)
-                i.hedge1.finish(p)
+                i.HalfEdge1.finish(p)
             i = i.pnext
 
     def get_output(self):
         res = []
-        for o in self.hedges:
+        for o in self.HalfEdges:
             p0 = o.start
             p1 = o.end
             res.append((p0.x, p0.y, p1.x, p1.y))

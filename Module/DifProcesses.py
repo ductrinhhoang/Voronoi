@@ -21,7 +21,7 @@ def get_data_from_file(input_path, num_bonus_point=0):
             if (float(coords[0])*5000, float(coords[1])*5000) not in sites:
                 sites.append(
                     (float(coords[0])*5000, float(coords[1])*5000))
-        print("Datas are got from", input_path)
+        print("Datas are got from:", input_path)
     return sites
 
 
