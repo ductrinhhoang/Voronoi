@@ -1,8 +1,7 @@
 import math
 from collections import defaultdict
-from Module import Support
+from Module import OtherProcess
 import timeit
-
 from Module import DCEL
 
 
@@ -201,14 +200,6 @@ class Voronoi:
                 i.hedge1.finish(p)
             i = i.pnext
 
-    def print_output(self):
-        it = 0
-        for o in self.hedges:
-            it = it + 1
-            p0 = o.start
-            p1 = o.end
-            print(p0.x, p0.y, p1.x, p1.y)
-
     def get_output(self):
         res = []
         for o in self.hedges:
@@ -218,14 +209,17 @@ class Voronoi:
         return res
 
 def run(input_path):
-    sites = Support.get_rand_input_sites(1000)
-    Support.from_file(sites, input_path)
-    vor = Voronoi(sites)
-    print('Computing voronoi diagram for ' + str(len(sites)) + ' sites')
-    strt = timeit.default_timer()
-    vor.process()
-    end = timeit.default_timer()
-    print('Time: ', end - strt)
-    lines = vor.get_output()
-    Support.save_txt_file(sites, vor)
-    Support.save_png_file(sites, vor, lines)
+    try:
+        sites = OtherProcess.get_rand_input_sites(1000)
+        OtherProcess.from_file(sites, input_path)
+        vor = Voronoi(sites)
+        print('Computing voronoi diagram for ' + str(len(sites)) + ' sites')
+        strt = timeit.default_timer()
+        vor.process()
+        end = timeit.default_timer()
+        print('Time: ', end - strt)
+        lines = vor.get_output()
+        OtherProcess.save_txt_file(sites, vor)
+        OtherProcess.save_png_file(sites, vor, lines)
+    except:
+        print("Can't not read file. Please check your path!")

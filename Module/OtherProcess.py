@@ -13,7 +13,7 @@ def get_rand_input_sites(num_sites):
 
 
 def from_file(sites, input_path):
-    print("Parsing input from", input_path)
+    print("Datas are got from", input_path)
     with open(input_path, 'r') as f:
         line = f.readline()
         while line:
