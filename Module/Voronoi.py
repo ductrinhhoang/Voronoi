@@ -1,5 +1,7 @@
 import math
 from collections import defaultdict
+from Module import Support
+import timeit
 
 from Module import DCEL
 
@@ -214,3 +216,16 @@ class Voronoi:
             p1 = o.end
             res.append((p0.x, p0.y, p1.x, p1.y))
         return res
+
+def run(input_path):
+    sites = Support.get_rand_input_sites(1000)
+    Support.from_file(sites, input_path)
+    vor = Voronoi(sites)
+    print('Computing voronoi diagram for ' + str(len(sites)) + ' sites')
+    strt = timeit.default_timer()
+    vor.process()
+    end = timeit.default_timer()
+    print('Time: ', end - strt)
+    lines = vor.get_output()
+    Support.save_txt_file(sites, vor)
+    Support.save_png_file(sites, vor, lines)
