@@ -2,43 +2,6 @@ import heapq
 import itertools
 
 
-class CircleEvent:
-    def __init__(self, x, point, arc):
-        self.x = x
-        self.point = point
-        self.arc = arc
-        self.valid = True
-
-
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-
-class Arc:
-    def __init__(self, site, pprev=None, pnext=None):
-        self.site = site
-        self.pprev = pprev
-        self.pnext = pnext
-        self.e = None
-        self.HalfEdge0 = None
-        self.HalfEdge1 = None
-
-
-# half edge
-class HalfEdge:
-    def __init__(self, p):
-        self.start = p
-        self.end = None
-        self.done = False
-
-    def finish(self, p):
-        if self.done:
-            return
-        self.end = p
-        self.done = True
-
 class Queue:
     def __init__(self):
         self.pq = []
@@ -78,3 +41,40 @@ class Queue:
 
     def empty(self):
         return not self.pq
+
+
+class CircleEvent:
+    def __init__(self, x, point, arc):
+        self.x = x
+        self.point = point
+        self.arc = arc
+        self.valid = True
+
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
+class Arc:
+    def __init__(self, site, pprev=None, pnext=None):
+        self.site = site
+        self.pprev = pprev
+        self.pnext = pnext
+        self.e = None
+        self.HalfEdge0 = None
+        self.HalfEdge1 = None
+
+
+class HalfEdge:
+    def __init__(self, p):
+        self.start = p
+        self.end = None
+        self.done = False
+
+    def finish(self, p):
+        if self.done:
+            return
+        self.end = p
+        self.done = True

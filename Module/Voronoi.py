@@ -9,7 +9,7 @@ import os
 
 class Voronoi:
     def __init__(self, points):
-        self.HalfEdges = [] # half edges
+        self.HalfEdges = []  # half edges
         self.arc = None  # binary tree
         self.circle_events = DifClasses.Queue()
         self.voronoi_vertex = defaultdict(list)
@@ -115,35 +115,47 @@ class Voronoi:
         if (arc.pprev is None) or (arc.pnext is None):
             return
 
-        flag, x, o = self.circle(arc.pprev.site, arc.site, arc.pnext.site)
-        if flag and (x > x0):
-            arc.e = DifClasses.CircleEvent(x, o, arc)
+        flag, point_O, max_coord_x = self.circle(
+            arc.pprev.site, arc.site, arc.pnext.site)
+        if flag and (max_coord_x > x0):
+            arc.e = DifClasses.CircleEvent(max_coord_x, point_O, arc)
             self.circle_events.push(arc.e)
 
     def circle(self, point_A, point_B, point_C):
+        '''
+        Parameter:
+            each point in 3 points has structure: 2 property x, y
+        Output:
+            max coord of x of point in circle
+            center of circle include 3 points point_A, point_B, point_C
+        '''
         if ((point_B.x - point_A.x)*(point_C.y - point_A.y) - (point_C.x - point_A.x)*(point_B.y - point_A.y)) > 0:
             return False, None, None
 
         if (point_B.x-point_A.x)*(point_C.y - point_B.y) == (point_B.y-point_A.y)*(point_C.x - point_B.x):
-            return False, None, None # Points are co-linear
+            return False, None, None  # Points are co-linear
 
-        A = point_B.x - point_A.x
-        B = point_B.y - point_A.y
-        C = point_C.x - point_A.x
-        D = point_C.y - point_A.y
-        E = A*(point_A.x + point_B.x) + B*(point_A.y + point_B.y)
-        F = C*(point_A.x + point_C.x) + D*(point_A.y + point_C.y)
-        G = 2*(A*(point_C.y - point_B.y) - B*(point_C.x - point_B.x))
+        # epression support to caculate center of circle and max coord x
+        expr_1 = point_B.x - point_A.x
+        expr_2 = point_B.y - point_A.y
+        expr_3 = point_C.x - point_A.x
+        expr_4 = point_C.y - point_A.y
+        expr_5 = expr_1*(point_A.x + point_B.x) + \
+            expr_2*(point_A.y + point_B.y)
+        expr_6 = expr_3*(point_A.x + point_C.x) + \
+            expr_4*(point_A.y + point_C.y)
+        expr_7 = 2*(expr_1*(point_C.y - point_B.y) -
+                    expr_2*(point_C.x - point_B.x))
 
-        # point o is the center of the circle
-        ox = 1.0 * (D*E - B*F) / G
-        oy = 1.0 * (A*F - C*E) / G
+        # point_O is the center of the circle
+        point_O = DifClasses.Point(
+            (expr_4*expr_5 - expr_2*expr_6) / expr_7, (expr_1*expr_6 - expr_3*expr_5) / expr_7)
 
-        # o.x plus radius equals max x coord
-        x = ox + math.sqrt((point_A.x-ox)**2 + (point_A.y-oy)**2)
-        o = DifClasses.Point(ox, oy)
+        # max_cood_x = o.x + radius
+        max_cood_x = point_O.x + math.sqrt((point_A.x-point_O.x)
+                                           ** 2 + (point_A.y-point_O.y)**2)
 
-        return True, x, o
+        return True, point_O, max_cood_x
 
     def intersect(self, point, arc):
         # check whether a new parabola at point p intersect with arc
@@ -211,7 +223,7 @@ class Voronoi:
         return res
 
 
-def run(input_path, output_path = "Output"):
+def run(input_path, output_path="Output"):
     try:
         sites = DifProcesses.get_data_from_file(input_path)
         vor = Voronoi(sites)
@@ -219,10 +231,10 @@ def run(input_path, output_path = "Output"):
         vor.process()
         end = time.time()
         lines = vor.get_output()
-        
+
         if not os.path.exists(output_path):
             os.mkdir(output_path)
-        
+
         print("Output is written in directory:", output_path)
         DifProcesses.save_txt_file(sites, vor, output_path)
         DifProcesses.save_png_file(sites, vor, lines, output_path)
