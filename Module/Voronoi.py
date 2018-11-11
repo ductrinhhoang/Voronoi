@@ -3,6 +3,7 @@ from collections import defaultdict
 from Module import DifProcesses
 import timeit
 from Module import DifClasses
+import os
 
 
 class Voronoi:
@@ -209,7 +210,7 @@ class Voronoi:
         return res
 
 
-def run(input_path):
+def run(input_path, output_path = "Output"):
     try:
         # sites = DifProcesses.get_rand_input_sites(1000)
         sites = DifProcesses.get_data_from_file(input_path)
@@ -220,7 +221,11 @@ def run(input_path):
         end = timeit.default_timer()
         print('Time: ', end - strt)
         lines = vor.get_output()
-        DifProcesses.save_txt_file(sites, vor)
-        DifProcesses.save_png_file(sites, vor, lines)
+        
+        if not os.path.exists(output_path):
+            os.mkdir(output_path)
+            
+        DifProcesses.save_txt_file(sites, vor, output_path)
+        DifProcesses.save_png_file(sites, vor, lines, output_path)
     except:
         print("Has bug. Please check")
